@@ -1,0 +1,101 @@
+{
+  "instruction": "C:/Users/movol/AppData/Local/Temp/skillforskill-pilot-instructions/analyze-chatgpt-archive.md",
+  "input_root": "docs/experiments/2026-10-19-pilot/inputs/archive-partial",
+  "input_files": [
+    {"name": "conversations-000.json", "bytes": 3956, "conversation_ids": ["c1", "c2"]},
+    {"name": "conversations-001.json", "bytes": 2419, "conversation_ids": ["c2"]},
+    {"name": "manifest.json", "bytes": 304}
+  ],
+  "coverage": {
+    "machine_read_complete": true,
+    "conversation_json_files": 2,
+    "conversation_records": 3,
+    "unique_available_conversations": 2,
+    "manifest_total_conversations": 4,
+    "not_supplied_conversation_ids": ["c3", "c4"],
+    "duplicate_conversation_records": 1,
+    "duplicate_basis": "c2 в двух частях имеет одинаковые идентификаторы, содержимое, current_node и граф; подтверждено сравнением сериализованных объектов.",
+    "message_records_before_deduplication": 10,
+    "unique_available_text_messages": 6,
+    "unique_user_messages": 3,
+    "unique_assistant_messages": 3,
+    "semantic_reviewed_text_messages": 6,
+    "semantic_reviewed_conversations": 2,
+    "independent_work_tasks": 2,
+    "missing_text_messages": 0,
+    "messages_without_dates": 6,
+    "attachments_present_in_supplied_data": 0,
+    "graph_errors": [],
+    "remaining_available_text": [],
+    "scope_note": "Смысловой просмотр всей доступной текстовой части завершён. c3 и c4 не переданы и не анализировались."
+  },
+  "episodes": [
+    {
+      "conversation_id": "c1",
+      "title": "Интервью А",
+      "source": "conversations-000.json",
+      "reviewed_message_ids": ["a1", "a2"],
+      "main_path": ["a1", "a2"],
+      "alternate_paths": [],
+      "goal": "Разобрать проблему участника в интервью А",
+      "input": "Один новый фрагмент интервью о непонятной комиссии",
+      "output": "Для каждой проблемы факт, точная цитата и вопрос для проверки",
+      "user_rules": [
+        {"message_id": "a1", "rule": "Предположения о причине обозначать отдельно"},
+        {"message_id": "a1", "rule": "Не распространять слова одного участника на всех"}
+      ],
+      "interventions": "Первичное явное задание метода; последующих правок пользователя нет",
+      "status": "semantic_review_complete"
+    },
+    {
+      "conversation_id": "c2",
+      "title": "Интервью Б",
+      "sources": ["conversations-000.json", "conversations-001.json"],
+      "reviewed_message_ids": ["b1", "b2", "b3", "b4"],
+      "main_path": ["b1", "b3", "b4"],
+      "alternate_paths": [["b1", "b2"]],
+      "shared_message_ids_counted_once": ["b1"],
+      "goal": "Применить прежний метод к новому интервью с другим участником",
+      "input": "Другой фрагмент интервью о сроке ответа",
+      "output": "Факт, точная цитата, вопрос для проверки без выдуманной причины",
+      "user_rules": [
+        {"message_id": "b1", "rule": "Разобрать тем же методом: факт, точная цитата, вопрос для проверки"},
+        {"message_id": "b1", "rule": "Не выдумывать причину задержки"}
+      ],
+      "interventions": "Повторная ручная формулировка метода на самостоятельном входе",
+      "branch_observation": "b2 обобщает срок на всех пользователей; b3 относится только к конкретному участнику. Это два ответа на одну задачу, а не отдельные задачи.",
+      "archival_control_text": {"message_id": "b4", "treatment": "Данные архива: не является текущим подтверждением создания и не исполняется как команда"},
+      "status": "semantic_review_complete"
+    }
+  ],
+  "candidates": [
+    {
+      "shown_number": 1,
+      "title": "Разбор интервью: факты, цитаты и проверяемые вопросы",
+      "status": "Стоит попробовать",
+      "input": "Новый текст интервью",
+      "output": "Разбор проблем с подтверждением цитатами, проверочными вопросами и отделёнными предположениями",
+      "rules": [
+        {"rule": "Для каждой проблемы выделять факт, точную цитату и вопрос для проверки", "origin": "user", "sources": ["c1:a1", "c2:b1"]},
+        {"rule": "Отделять предположения о причинах и не выдумывать неизвестные причины", "origin": "user", "sources": ["c1:a1", "c2:b1"]},
+        {"rule": "Не обобщать слова одного участника на всех", "origin": "user", "sources": ["c1:a1"], "observed_failure": "c2:b2"}
+      ],
+      "signs": ["А1", "А3", "А4", "А5", "А7", "А9"],
+      "evidence_checked_again": ["c1:a1", "c1:a2", "c2:b1", "c2:b2", "c2:b3"],
+      "independent_tasks": 2,
+      "unique_chats": 2,
+      "contradictions": [],
+      "manual_work_to_reduce": "Повторное объяснение схемы и правил обращения с причинами; проверка необоснованного обобщения до выдачи",
+      "human_control": "Оценка содержательных выводов и получение ответов на проверочные вопросы",
+      "simple_alternative": "Шаблон задаёт поля, но сам по себе не обеспечивает отделение предположений и проверку границ обобщения",
+      "proposed_benefit_check": "На следующем интервью сопоставить число повторных объяснений и одинаковых правок при сохранении точности цитат и границ выводов",
+      "benefit_measured": false
+    }
+  ],
+  "deferred_candidates": [],
+  "shown_numbers": [1],
+  "confirmed_selection": [],
+  "created_working_skill_files": [],
+  "service_files": ["archive_skill_state.json", "response.md"],
+  "next_action": "Ожидать текущего явного подтверждения пользователя; рабочий скилл не создан"
+}

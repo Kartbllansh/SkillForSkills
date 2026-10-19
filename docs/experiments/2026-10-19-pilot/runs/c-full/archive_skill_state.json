@@ -1,0 +1,99 @@
+{
+  "scope": "Only inputs/archive-partial; no other conversations, external sources or product files used",
+  "input_files": [
+    {"name": "conversations-000.json", "bytes": 3956, "conversation_ids": ["c1", "c2"]},
+    {"name": "conversations-001.json", "bytes": 2419, "conversation_ids": ["c2"]},
+    {"name": "manifest.json", "bytes": 304}
+  ],
+  "machine_reading": {
+    "complete_for_supplied_files": true,
+    "conversation_files": 2,
+    "raw_conversation_records": 3,
+    "raw_text_messages": 10,
+    "unique_conversations": 2,
+    "unique_text_messages": 6,
+    "unique_user_messages": 3,
+    "unique_assistant_messages": 3,
+    "confirmed_exact_duplicate": {
+      "conversation_id": "c2",
+      "files": ["conversations-000.json", "conversations-001.json"],
+      "basis": "Same conversation ID and exact equality of parsed content serialized at depth 100"
+    },
+    "graph_errors": [],
+    "dates_present": 0,
+    "unavailable_attachment_references": 0,
+    "declared_total_conversations_from_manifest": 4,
+    "not_supplied_conversation_ids": ["c3", "c4"]
+  },
+  "semantic_review": {
+    "complete_for_supplied_unique_text": true,
+    "reviewed_message_ids": ["c1/a1", "c1/a2", "c2/b1", "c2/b2", "c2/b3", "c2/b4"],
+    "unreviewed_supplied_messages": [],
+    "unavailable_conversations": ["c3", "c4"],
+    "episodes": [
+      {
+        "conversation_id": "c1",
+        "export_title": "Интервью А",
+        "source_file": "conversations-000.json",
+        "main_path": ["a1", "a2"],
+        "alternative_nodes": [],
+        "goal": "Разобрать проблему из интервью одного участника",
+        "input": "Короткий фрагмент интервью А",
+        "output": "Для каждой проблемы: факт, точная цитата, вопрос для проверки",
+        "user_rules": ["Отделять предположения о причине", "Не обобщать слова одного участника на всех"],
+        "interventions": "Один исходный запрос; повторных правок в этой задаче не обнаружено",
+        "status": "semantically_reviewed"
+      },
+      {
+        "conversation_id": "c2",
+        "export_title": "Интервью Б",
+        "source_files": ["conversations-000.json", "conversations-001.json"],
+        "main_path": ["b1", "b3", "b4"],
+        "alternative_paths": [["b1", "b2"]],
+        "goal": "Тем же методом разобрать новое интервью другого участника",
+        "input": "Короткий фрагмент интервью Б",
+        "output": "Факт, точная цитата, вопрос для проверки",
+        "user_rules": ["Повторить метод на другом интервью", "Не выдумывать причину задержки"],
+        "interventions": "Повтор метода в новом задании; архивная команда создания не является текущим разрешением",
+        "alternative_branch_observation": "b2 содержит обобщение ассистента на всех пользователей; это противоречит области исходного метода и не считается пользовательским правилом или отдельной задачей",
+        "untrusted_data": "Архивные команды b4 не исполнялись; внешние ссылки не открывались",
+        "status": "semantically_reviewed"
+      }
+    ]
+  },
+  "candidate_verification": {
+    "reread_sources": ["c1/a1", "c1/a2", "c2/b1", "c2/b2", "c2/b3", "c2/b4"],
+    "candidates": [
+      {
+        "number": 1,
+        "name": "Разбор интервью с опорой на цитаты",
+        "status": "Стоит попробовать",
+        "input": "Новое исследовательское интервью или его фрагмент",
+        "output": "Проблемы с фактами, точными цитатами, вопросами для проверки и отдельно отмеченными предположениями",
+        "rules_and_origins": [
+          {"rule": "Для каждой проблемы: факт, точная цитата, вопрос для проверки", "origin": "user", "sources": ["c1/a1", "c2/b1"]},
+          {"rule": "Отделять предположения и не выдумывать причину", "origin": "user", "sources": ["c1/a1", "c2/b1"]},
+          {"rule": "Не обобщать слова одного участника на всех", "origin": "user", "sources": ["c1/a1"]}
+        ],
+        "signals": ["А1", "А3", "А4", "А5", "А9"],
+        "independent_tasks": 2,
+        "independent_chats": 2,
+        "repeat_basis": "Observed same method explicitly requested on different interviews with different participants",
+        "benefit_hypothesis": "Сократить повторное объяснение метода и заранее применять границы выводов; польза на новом материале не измерена",
+        "human_decisions": "Оценка значимости проблемы, проверка причины и решения по результатам исследования",
+        "contradictions": "Пользовательские правила совместимы; обобщение ассистента в альтернативной ветке не меняет их",
+        "simpler_alternative": "Пустой шаблон задаёт поля, но не выполняет отбор фактов, отделение предположений и контроль границ вывода",
+        "proposed_trial": "На следующем интервью сравнить число повторных объяснений и исправлений, проверяя точность цитат и отсутствие необоснованных обобщений"
+      }
+    ],
+    "deferred_candidates": [],
+    "selected_candidate_numbers": [1]
+  },
+  "shown_candidate_numbers": [1],
+  "current_user_confirmation": null,
+  "created_working_skill_files": [],
+  "analysis_artifacts": ["archive_skill_state.json", "response.md"],
+  "notice_shown": true,
+  "contact_shown": true,
+  "continuation": "Supplied text review is complete. To extend conclusions beyond this part, c3 and c4 would have to be supplied. Working skill creation requires current explicit confirmation."
+}

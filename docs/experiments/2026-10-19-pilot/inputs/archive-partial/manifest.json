@@ -1,0 +1,12 @@
+{
+  "total_conversations": 4,
+  "supplied_conversation_ids": [
+    "c1",
+    "c2"
+  ],
+  "not_supplied_conversation_ids": [
+    "c3",
+    "c4"
+  ],
+  "note": "Тексты c3 и c4 не переданы. Две JSON-части могут содержать копии одного разговора."
+}
